@@ -1,0 +1,41 @@
+<editor>
+    <help>/commander/pages/@PLUGIN_NAME@/@PLUGIN_KEY@_help?s=Administration&amp;ss=Plugins#runMake</help>
+    <formElement>
+        <type>entry</type>
+        <label>Make Executable Location:</label>
+        <value>make</value>
+        <property>makeexecpath</property>
+        <required>1</required>
+        <documentation>The location of make. i.e: /path/to/make.</documentation>
+    </formElement>
+    <formElement>
+        <type>checkbox</type>
+        <label>Keep Going:</label>
+        <property>keepgoing</property>
+        <required>0</required>
+        <checkedValue>1</checkedValue>
+        <uncheckedValue>0</uncheckedValue>
+        <documentation>Instructs make to keep going if errors are encountered.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Make File:</label>
+        <property>file</property>
+        <required>1</required>
+        <documentation>The makefile to use, default is Makefile in the current directory.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Target:</label>
+        <property>target</property>
+        <required>0</required>
+        <documentation>The make target(s) to be executed.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Working Directory:</label>
+        <property>workingdirectory</property>
+        <required>1</required>
+        <documentation>Provide the desired working directory. Leave blank to use the default workspace.</documentation>
+    </formElement>
+</editor>

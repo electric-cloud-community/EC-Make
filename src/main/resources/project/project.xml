@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exportedData version="39" buildLabel="" buildVersion="3.5.0.0">
+    <exportPath>/projects/@PLUGIN_KEY@-@PLUGIN_VERSION@</exportPath>
+    <project>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+            <property>
+                <propertyName>scripts</propertyName>
+                <description></description>
+                <propertySheet>
+                    <property>
+                        <propertyName>makeDriver</propertyName>
+                        <description></description>
+                        <expandable>1</expandable>
+                        <value></value>
+                    </property>
+                </propertySheet>
+            </property>
+            <property>
+                <propertyName>ec_setup</propertyName>
+                <value></value>
+                <expandable>0</expandable>
+            </property>
+            <property>
+                <propertyName>postp_matchers</propertyName>
+                <value></value>
+                <expandable>0</expandable>
+            </property>
+            <property>
+                <propertyName>ec_visibility</propertyName>
+                <description></description>
+                <expandable>1</expandable>
+                <value>pickListOnly</value>
+            </property>
+        </propertySheet>
+        <procedure>
+            <procedureName>runMake</procedureName>
+            <description>Runs make against a specific buildfile</description>
+            <jobNameTemplate></jobNameTemplate>
+            <resourceName></resourceName>
+            <workspaceName></workspaceName>
+            <projectName>EC-Make</projectName>
+            <propertySheet>
+                <property>                    <propertyName>ec_customEditorData</propertyName>                    <propertySheet>                        <property>                            <propertyName>parameters</propertyName>                            <propertySheet>                                <property>                                <propertyName>makeexecpath</propertyName>                                <propertySheet>                                    <property>                                        <propertyName>formType</propertyName>                                        <expandable>1</expandable>                                        <value>standard</value>                                    </property>                                </propertySheet>                                </property>                                <property>                                <propertyName>workingdirectory</propertyName>                                    <propertySheet>                                        <property>                                            <propertyName>formType</propertyName>                                            <expandable>1</expandable>                                            <value>standard</value>                                        </property>                                    </propertySheet>                                </property>                                <property>                                    <propertyName>file</propertyName>                                    <propertySheet>                                        <property>                                            <propertyName>formType</propertyName>                                            <expandable>1</expandable>                                            <value>standard</value>                                        </property>                                    </propertySheet>
+                                </property>
+                                <property>                                    <propertyName>keepgoing</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>checkedValue</propertyName>                                            <expandable>1</expandable>                                            <value>1</value>                                        </property>
+                                        <property>                                            <propertyName>formType</propertyName>                                            <expandable>1</expandable>                                            <value>standard</value>                                        </property>                                        <property>                                            <propertyName>initiallyChecked</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>0</value>
+                                        </property>
+                                        <property>
+                                            <propertyName>uncheckedValue</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>0</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                                <property>
+                                    <propertyName>target</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                            </propertySheet>
+                        </property>
+                    </propertySheet>
+                </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>0</expandable>
+                    <value></value>
+                </property>
+            </propertySheet>            <formalParameter>                <formalParameterName>makeexecpath</formalParameterName>                <defaultValue>make</defaultValue>                <description>The location of make. i.e: /path/to/make</description>                <required>1</required>                <type>entry</type>            </formalParameter>
+            <formalParameter>
+                <formalParameterName>workingdirectory</formalParameterName>
+                <defaultValue></defaultValue>
+                <description>The directory to change to before invoking the make file.</description>
+                <required>1</required>
+                <type>entry</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>file</formalParameterName>
+                <defaultValue></defaultValue>
+                <description>The makefile to use, default is Makefile in the current directory</description>
+                <required>1</required>
+                <type>entry</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>keepgoing</formalParameterName>
+                <defaultValue></defaultValue>
+                <description>Instructs make to keep going if errors are encountered</description>
+                <required>0</required>
+                <type>checkbox</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>target</formalParameterName>
+                <defaultValue></defaultValue>
+                <description>The make target(s) to be executed.</description>
+                <required>0</required>
+                <type>entry</type>
+            </formalParameter>
+            <step>
+                <stepName>runMakeCommandLine</stepName>
+                <alwaysRun>0</alwaysRun>
+                <broadcast>0</broadcast>
+                <command>$[/projects/$[/plugins/EC-Make/projectName]/scripts/makeDriver];</command>
+                <condition></condition>
+                <description></description>
+                <errorHandling>failProcedure</errorHandling>
+                <exclusive>0</exclusive>
+                <logFileName></logFileName>
+                <parallel>0</parallel>
+                <postProcessor>postp --loadProperty /myProject/postp_matchers</postProcessor>
+                <releaseExclusive>0</releaseExclusive>
+                <resourceName></resourceName>
+                <retries>0</retries>
+                <shell>ec-perl</shell>
+                <timeLimit></timeLimit>
+                <timeLimitUnits>minutes</timeLimitUnits>
+                <workingDirectory></workingDirectory>
+                <workspaceName></workspaceName>
+                <procedureName>runMake</procedureName>
+                <projectName>EC-Make</projectName>
+                <propertySheet>
+                    <property>
+                        <propertyName>ec_customEditorData</propertyName>
+                        <propertySheet>
+                            <property>
+                                <propertyName>formType</propertyName>
+                                <expandable>1</expandable>
+                                <value>command</value>
+                            </property>
+                        </propertySheet>
+                    </property>
+                </propertySheet>
+            </step>
+        </procedure>
+    </project>
+</exportedData>

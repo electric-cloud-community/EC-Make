@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="generator"
+          content="HTML Tidy for Windows (vers 14 February 2006), see www.w3.org" />
+    <meta content="text/html; charset=us-ascii"
+          http-equiv="content-type" />
+
+    <title>ElectricFlow Plugin for Make</title>
+    <link rel="stylesheet" href= "../../plugins/@PLUGIN_KEY@/pluginhelp.css" type="text/css" media= "screen" />
+</head>
+
+<body>
+    <div class="help">
+    <h1>Make</h1>
+    <p>Plugin Version @PLUGIN_VERSION@</p>
+    <hr style="margin-left: -10px; margin-top: 10px; height: 1px; width: 100%; color: #5981BD;" noshade="noshade" />
+    
+	<p>July 1, 2015</p>
+	
+    <p>Make is a tool that controls the generation of executables
+    and other non-source files of a program from the program's
+    source files.<br />
+     Make gets its knowledge of how to build your program from a
+    file called the makefile, which lists each of the non-source
+    files and how to compute it from other files.<br />
+     When you write a program, you should write a makefile for it,
+    so that it is possible to use Make to build and install the
+    program.</p>
+
+    <h2>Make Links</h2>
+
+    <p>More information can be found at
+    <a href="http://www.gnu.org/s/make/">this website</a>.</p>
+
+    <h2>ElectricFlow Integration to Make</h2>
+
+    <p>The plugin calls the Make command line and passes the
+    user-provided parameters.</p>
+
+    <h2>Integrated Version</h2>
+
+    <p>This plugin was developed and tested against version
+    3.81</p>
+
+    <h1>Plugin Procedures</h1>
+
+    <p>
+        IMPORTANT: For all parameter descriptions below, required
+        parameters are shown in <span class='required'>bold
+        italics</span>.
+    </p>
+
+    <div
+         id="runMake">
+        <a name='runMake'
+             id="runMake"></a> 
+
+        <h3>runMake</h3>
+
+        <p>This procedure allows you to build your applications
+        using the GNU/Make tool.</p>
+
+        <table class="grid">
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+
+                    <th>Description</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td class='required'>Make Executable
+                    Location</td>
+
+                    <td>The location of make. i.e: /path/to/make.
+                    (Required)</td>
+                </tr>
+
+                <tr>
+                    <td>Keep Going</td>
+
+                    <td>Instructs make to keep going if errors are
+                    encountered. (This is the command-line
+                    '--keep-going' option)(Required)</td>
+                </tr>
+
+                <tr>
+                    <td class='required'>Make File</td>
+
+                    <td>The makefile to use, default is Makefile in
+                    the current directory. (This is the
+                    command-line '--makefile'
+                    option)(Required)</td>
+                </tr>
+
+                <tr>
+                    <td>Target</td>
+
+                    <td>The make target(s) to be executed.</td>
+                </tr>
+
+                <tr>
+                    <td class='required'>Working Directory</td>
+
+                    <td>Provide the desired working directory.
+                    Leave blank to use the default workspace. (This
+                    is the command-line '--directory'
+                    option)(Required)</td>
+                </tr>
+            </tbody>
+        </table><img src="../../plugins/@PLUGIN_KEY@/images/MAKE-1.png"
+             alt="Form" />
+    </div>
+
+    <h1>Examples and Use Cases</h1>
+
+    <p>In this example we are going to use the make plugin to
+    compile the zlib utility.<br />
+     The source code can be found
+    <a href="http://zlib.net">here</a></p>
+
+    <ol>
+        <li>Once we have the zlib sources, we are going to store
+        them in the Desktop.</li>
+
+        <li>Before compiling the sources we will need to run
+        ./configure in the zlib folder.</li>
+
+        <li>If everything goes OK we will be able to compile
+        it.</li>
+
+        <li>The next step will be create an EC-MAKE step and fill
+        the parameter form:<br />
+         <img src="../../plugins/@PLUGIN_KEY@/images/MAKE-1.png"
+             alt="Form" /></li>
+
+        <li>Finally after filling the form we are going to run the
+        procedure in order to compile the source files.</li>
+
+        <li>If the step was successful you will see something
+        like:<br />
+         <img src="../../plugins/@PLUGIN_KEY@/images/MAKE-2.png"
+             alt="result" /></li>
+
+        <li>If you want you can see the log file created during the
+        compilation<br />
+         <img src="../../plugins/@PLUGIN_KEY@/images/MAKE-3.png"
+             alt="logFile" /></li>
+    </ol>
+
+    <h1>Release Notes</h1>
+	
+	<h2>@PLUGIN_KEY@-2.0.5</h2>
+
+    <ul>
+        <li>Changed STDOUT binmode.</li>
+    </ul>
+
+
+	<h2>@PLUGIN_KEY@-2.0.4</h2>
+
+    <ul>
+        <li>Renamed ElectricCommander to ElectricFlow.</li>
+    </ul>
+
+    <h2>@PLUGIN_KEY@-2.0.3</h2>
+
+    <ul>
+        <li>Procedure name(s) were changed in the step picker section</li>
+    </ul>
+    
+    <h2>@PLUGIN_KEY@-2.0.2</h2>
+
+    <ul>
+        <li>XML parameter panel</li>
+
+        <li>Help page was updated</li>
+    </ul>
+
+    <h2>EC-Make 1.0.5</h2>
+
+    <ul>
+        <li>Make executable can be set as a parameter.</li>
+    </ul>
+    </div>
+</body>
+</html>

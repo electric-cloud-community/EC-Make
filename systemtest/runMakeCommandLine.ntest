@@ -1,0 +1,427 @@
+# -*-Perl-*-
+
+# runMakeCommandLine.ntest -
+#
+# ECMake
+#
+# Copyright (c) 2005-2010 Electric Cloud, Inc.
+# All rights reserved
+
+use strict;
+use warnings;
+use ECTest;
+use ECSelenium;
+
+ 
+# system tests
+
+
+require "$::gTestFileDir/make-common.ntest";
+
+$::gProjectImported = 0;
+$::gtestProjectName = 'MakeTestProject';
+
+my $outcome = '';
+
+########################################################################
+# importProject - contains the whole process to be done by the plugin, 
+#                 it builds the command line, sets the properties and 
+#                 the working directory
+#
+# Arguments:
+#   -none
+#
+# Returns:
+#   -nothing
+#
+########################################################################
+  sub importProject() {
+ 
+      assertOK($::N->import(
+               { file =>"$::gTestFileDir/makeSystemTest.xml",
+                 path  => "/projects/MakeTestProject",
+                 force => 1
+               } ), 'import runMakeCommandLine');
+     
+      assertOK($::N->getProcedure($::gtestProjectName, 'executeMakeWithRequiredOptions'),
+      'executeMakeWithRequiredOptions procedure exists');
+           
+      assertOK($::N->getProcedure($::gtestProjectName, 'executeMakeWithEverythingButTarget'),
+     'executeMakeWithEverythingButTarget procedure exists');
+     
+      assertOK($::N->getProcedure($::gtestProjectName, 'executeMakeWithEverythingButKeepGoing'),
+      'executeMakeWithEverythingButKeepGoing procedure exists');
+      
+      assertOK($::N->getProcedure($::gtestProjectName, 'executeMakeWithRequiredParametersAndKeepGoing'),
+      'executeMakeWithRequiredParametersAndKeepGoing procedure exists');
+     
+     assertOK($::N->getProcedure($::gtestProjectName, 'executeMakeWithRequiredParametersAndTarget'),
+     'executeMakeWithRequiredParametersAndTarget procedure exists');
+ 
+     assertOK($::N->getProcedure($::gtestProjectName, 'executeMakeWithAllOptions'),
+     'executeMakeWithAllOptions procedure exists');    
+      
+      
+      $::gProjectImported = 1;
+ }
+
+########################################################################
+# doSetup - imports project if it hasn't been already imported
+#
+# Arguments:
+#   -none
+#
+# Returns:
+#   -nothing
+#
+########################################################################
+  sub doSetup() {
+
+      if(! $::gProjectImported) {
+          importProject();
+      }
+
+   
+  }
+
+  ntest "executeMakeWithRequiredOptions", {}, sub {
+ 
+      doSetup();
+      # run test job
+     
+      my $xpath = $::N->runProcedure($::gtestProjectName, 
+              {procedureName => "executeMakeWithRequiredOptions",
+              pollInterval  => '1',
+              timeout => 600,
+                   actualParameter => [
+                  
+                  ]
+      });
+      
+      
+      # make sure it finished
+      my $jobId = 0;
+      my $status = '';
+            
+      assertOK($xpath, 'runProcedure with errors');
+      if ($xpath) {
+          $jobId  = $xpath->findvalue("//jobId");
+          $status = $xpath->findvalue("//status");
+          $outcome = $xpath->findvalue("//outcome");
+  
+          assertTrue($jobId && $jobId ne "",'valid job id');
+          assertEq('completed',$status,"job $jobId complete");
+  
+          #abort if job did not finish
+          if ($status ne 'completed') {
+              assertOK($::N->abortJob($jobId, {force => 1}));
+          }
+      }
+  
+      # get the job details
+      $xpath = $::N->getJobDetails($jobId);
+  
+      # write the job details to a file in the test directory
+      writeFile(
+         "$::gCurrentTestDir/jobDetails.log",
+         "====start Job Details====\n$xpath->{_xml}\n\n====end job details===\n\n");
+  
+      # get the value of the makeCommandLine property
+      my $cmd = $xpath->findvalue("//property[propertyName='makeCommandLine']/value");
+  
+      # get the value of the WorkingDir property
+      my $dir = $xpath->findvalue("//property[propertyName='workingdirectory']/value");
+  
+      # make sure the $cmd and $dir are what was expected
+      assertEq('"make" --directory="/cygdrive/c/" --makefile="Makefile"', 
+         $cmd, 'make command line doesn\'t match expected output');
+         
+      assertEq('/cygdrive/c/', $dir, 
+           'directory doesn\'t match expected output');     
+
+  };
+ 
+  ntest "executeMakeWithEverythingButTarget", {}, sub {
+ 
+     doSetup();
+     # run test job
+   
+      my $xpath = $::N->runProcedure($::gtestProjectName, 
+              {procedureName => "executeMakeWithEverythingButTarget",
+              pollInterval  => '1',
+              timeout => 600,
+                   actualParameter => [
+                  
+                  ]
+      });
+      
+      
+      # make sure it finished
+      my $jobId = 0;
+      my $status = '';
+            
+      assertOK($xpath, 'runProcedure with errors');
+      if ($xpath) {
+          $jobId  = $xpath->findvalue("//jobId");
+          $status = $xpath->findvalue("//status");
+          $outcome = $xpath->findvalue("//outcome");
+  
+          assertTrue($jobId && $jobId ne "",'valid job id');
+          assertEq('completed',$status,"job $jobId complete");
+  
+          #abort if job did not finish
+          if ($status ne 'completed') {
+              assertOK($::N->abortJob($jobId, {force => 1}));
+          }
+      }
+  
+      # get the job details
+      $xpath = $::N->getJobDetails($jobId);
+  
+      # write the job details to a file in the test directory
+      writeFile(
+         "$::gCurrentTestDir/jobDetails.log",
+         "====start Job Details====\n$xpath->{_xml}\n\n====end job details===\n\n");
+  
+      # get the value of the makeCommandLine property
+      my $cmd = $xpath->findvalue("//property[propertyName='makeCommandLine']/value");
+  
+      # get the value of the WorkingDir property
+      my $dir = $xpath->findvalue("//property[propertyName='workingdirectory']/value");
+  
+      # make sure the $cmd and $dir are what was expected
+      assertEq('"make" --keep-going --directory="/cygdrive/c/" --makefile="Makefile"', 
+         $cmd, 'make command line doesn\'t match expected output');
+         
+       assertEq('/cygdrive/c/', $dir, 
+           'directory doesn\'t match expected output');   
+
+  };
+
+  ntest "executeMakeWithEverythingButKeepGoing", {}, sub {
+ 
+      doSetup();
+      # run test job
+     
+      my $xpath = $::N->runProcedure($::gtestProjectName, 
+              {procedureName => "executeMakeWithEverythingButKeepGoing",
+              pollInterval  => '1',
+              timeout => 600,
+                   actualParameter => [
+                  
+                  ]
+      });
+      
+      
+      # make sure it finished
+      my $jobId = 0;
+      my $status = '';
+            
+      assertOK($xpath, 'runProcedure with errors');
+      if ($xpath) {
+          $jobId  = $xpath->findvalue("//jobId");
+          $status = $xpath->findvalue("//status");
+          $outcome = $xpath->findvalue("//outcome");
+  
+          assertTrue($jobId && $jobId ne "",'valid job id');
+          assertEq('completed',$status,"job $jobId complete");
+  
+          #abort if job did not finish
+          if ($status ne 'completed') {
+              assertOK($::N->abortJob($jobId, {force => 1}));
+          }
+      }
+  
+      # get the job details
+      $xpath = $::N->getJobDetails($jobId);
+  
+      # write the job details to a file in the test directory
+      writeFile(
+         "$::gCurrentTestDir/jobDetails.log",
+         "====start Job Details====\n$xpath->{_xml}\n\n====end job details===\n\n");
+  
+      # get the value of the makeCommandLine property
+      my $cmd = $xpath->findvalue("//property[propertyName='makeCommandLine']/value");
+  
+      # get the value of the WorkingDir property
+      my $dir = $xpath->findvalue("//property[propertyName='workingdirectory']/value");
+  
+      # make sure the $cmd and $dir are what was expected
+      assertEq('"make" --directory="/cygdrive/c/" --makefile="Makefile" aa', 
+         $cmd, 'make command line doesn\'t match expected output');
+         
+      assertEq('/cygdrive/c/', $dir, 
+           'directory doesn\'t match expected output');     
+
+  };
+
+  ntest "executeMakeWithRequiredParametersAndKeepGoing", {}, sub {
+ 
+      doSetup();
+      # run test job
+     
+      my $xpath = $::N->runProcedure($::gtestProjectName, 
+              {procedureName => "executeMakeWithRequiredParametersAndKeepGoing",
+              pollInterval  => '1',
+              timeout => 600,
+                   actualParameter => [
+                  
+                  ]
+      });
+      
+      
+      # make sure it finished
+      my $jobId = 0;
+      my $status = '';
+            
+      assertOK($xpath, 'runProcedure with errors');
+      if ($xpath) {
+          $jobId  = $xpath->findvalue("//jobId");
+          $status = $xpath->findvalue("//status");
+          $outcome = $xpath->findvalue("//outcome");
+  
+          assertTrue($jobId && $jobId ne "",'valid job id');
+          assertEq('completed',$status,"job $jobId complete");
+  
+          #abort if job did not finish
+          if ($status ne 'completed') {
+              assertOK($::N->abortJob($jobId, {force => 1}));
+          }
+      }
+  
+      # get the job details
+      $xpath = $::N->getJobDetails($jobId);
+  
+      # write the job details to a file in the test directory
+      writeFile(
+         "$::gCurrentTestDir/jobDetails.log",
+         "====start Job Details====\n$xpath->{_xml}\n\n====end job details===\n\n");
+  
+      # get the value of the makeCommandLine property
+      my $cmd = $xpath->findvalue("//property[propertyName='makeCommandLine']/value");
+  
+      # get the value of the WorkingDir property
+      my $dir = $xpath->findvalue("//property[propertyName='workingdirectory']/value");
+  
+      # make sure the $cmd and $dir are what was expected
+      assertEq('"make" --keep-going --directory="/cygdrive/c/" --makefile="Makefile"', 
+         $cmd, 'make command line doesn\'t match expected output');
+         
+      assertEq('/cygdrive/c/', $dir, 
+           'directory doesn\'t match expected output');   
+
+  };
+# 
+    ntest "executeMakeWithRequiredParametersAndTarget", {}, sub {
+# 
+      doSetup();
+      # run test job
+     
+      my $xpath = $::N->runProcedure($::gtestProjectName, 
+              {procedureName => "executeMakeWithRequiredParametersAndTarget",
+              pollInterval  => '1',
+              timeout => 600,
+                   actualParameter => [
+                  
+                  ]
+      });
+      
+      
+      # make sure it finished
+      my $jobId = 0;
+      my $status = '';
+            
+      assertOK($xpath, 'runProcedure with errors');
+      if ($xpath) {
+          $jobId  = $xpath->findvalue("//jobId");
+          $status = $xpath->findvalue("//status");
+          $outcome = $xpath->findvalue("//outcome");
+  
+          assertTrue($jobId && $jobId ne "",'valid job id');
+          assertEq('completed',$status,"job $jobId complete");
+  
+          #abort if job did not finish
+          if ($status ne 'completed') {
+              assertOK($::N->abortJob($jobId, {force => 1}));
+          }
+      }
+  
+      # get the job details
+      $xpath = $::N->getJobDetails($jobId);
+  
+      # write the job details to a file in the test directory
+      writeFile(
+         "$::gCurrentTestDir/jobDetails.log",
+         "====start Job Details====\n$xpath->{_xml}\n\n====end job details===\n\n");
+  
+      # get the value of the makeCommandLine property
+      my $cmd = $xpath->findvalue("//property[propertyName='makeCommandLine']/value");
+  
+      # get the value of the WorkingDir property
+      my $dir = $xpath->findvalue("//property[propertyName='workingdirectory']/value");
+  
+      # make sure the $cmd and $dir are what was expected
+      assertEq('"make" --directory="/cygdrive/c/" --makefile="Makefile" bb', 
+         $cmd, 'make command line doesn\'t match expected output');
+         
+      assertEq('/cygdrive/c/', $dir, 
+           'directory doesn\'t match expected output');     
+
+  };
+
+  ntest "executeMakeWithAllOptions", {}, sub {
+ 
+      doSetup();
+      # run test job
+     
+      my $xpath = $::N->runProcedure($::gtestProjectName, 
+              {procedureName => "executeMakeWithAllOptions",
+              pollInterval  => '1',
+              timeout => 600,
+                   actualParameter => [
+                  
+                  ]
+      });
+      
+      
+      # make sure it finished
+      my $jobId = 0;
+      my $status = '';
+            
+      assertOK($xpath, 'runProcedure with errors');
+      if ($xpath) {
+          $jobId  = $xpath->findvalue("//jobId");
+          $status = $xpath->findvalue("//status");
+          $outcome = $xpath->findvalue("//outcome");
+  
+          assertTrue($jobId && $jobId ne "",'valid job id');
+          assertEq('completed',$status,"job $jobId complete");
+  
+          #abort if job did not finish
+          if ($status ne 'completed') {
+              assertOK($::N->abortJob($jobId, {force => 1}));
+          }
+      }
+  
+      # get the job details
+      $xpath = $::N->getJobDetails($jobId);
+  
+      # write the job details to a file in the test directory
+      writeFile(
+         "$::gCurrentTestDir/jobDetails.log",
+         "====start Job Details====\n$xpath->{_xml}\n\n====end job details===\n\n");
+  
+      # get the value of the makeCommandLine property
+      my $cmd = $xpath->findvalue("//property[propertyName='makeCommandLine']/value");
+  
+      # get the value of the WorkingDir property
+      my $dir = $xpath->findvalue("//property[propertyName='workingdirectory']/value");
+  
+      # make sure the $cmd and $dir are what was expected
+      assertEq('"make" --keep-going --directory="/cygdrive/c/" --makefile="Makefile" aa bb', 
+         $cmd, 'make command line doesn\'t match expected output');
+         
+      assertEq('/cygdrive/c/', $dir, 
+           'directory doesn\'t match expected output');     
+
+  };
